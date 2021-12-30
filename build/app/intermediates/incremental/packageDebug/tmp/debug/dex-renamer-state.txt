@@ -1,4 +1,4 @@
-#Wed Dec 29 04:02:12 WAT 2021
-base.0=C\:\\Users\\hp\\Desktop\\ResMart\\resmart\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Thu Dec 30 11:38:28 WAT 2021
+base.0=/home/adedokun/Desktop/flutter_learn resources/important flutter/Respro-App/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
