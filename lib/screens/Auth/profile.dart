@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:resmart/components/profile_page_content.dart';
 import 'package:resmart/constants/style.dart';
 import 'package:resmart/model/user_model.dart';
+import 'package:resmart/screens/Auth/login.dart';
 import 'package:resmart/screens/Auth/settings.dart';
 import 'package:resmart/utils/api_service.dart';
 import 'package:resmart/utils/helpers/fetch_mage.dart';
@@ -17,14 +18,14 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with ChangeNotifier {
+class _ProfilePageState extends State<ProfilePage> {
   final ApiService apiService = ApiService();
   UserModel? userModel;
 
   Future<Map<String, dynamic>> getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userToken = prefs.getString('token');
-    //print(userToken);
+    print(userToken);
     var response = await apiService.profile(token: userToken!);
     print('data: ${response.data['data']}');
     await prefs.setString('userData', response.data.toString());
@@ -97,7 +98,8 @@ class _ProfilePageState extends State<ProfilePage> with ChangeNotifier {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 100.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 100.0, horizontal: 15),
             child: Column(
               children: <Widget>[
                 Padding(
@@ -120,8 +122,8 @@ class _ProfilePageState extends State<ProfilePage> with ChangeNotifier {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
-                        'Komolafe',
+                      Text(
+                        userModel!.firstName + ' ' + userModel!.lastName,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -130,8 +132,8 @@ class _ProfilePageState extends State<ProfilePage> with ChangeNotifier {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
-                        'Lorem Ipsum dollor sit ametLorem Ipsum dolor sit amet',
+                      Text(
+                        userModel!.email,
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -162,7 +164,15 @@ class _ProfilePageState extends State<ProfilePage> with ChangeNotifier {
                     ProfilePageContent(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       rightIcon: Icons.logout_outlined,
-                      onPressed: () {},
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.remove('token');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()));
+                      },
                       leftIcon: Icons.chevron_right_outlined,
                       pageContent: 'Logout',
                     ),

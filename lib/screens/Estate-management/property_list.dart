@@ -1,27 +1,75 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:resmart/components/product_list.dart';
+import 'package:resmart/constants/style.dart';
+import 'package:resmart/model/estate_model.dart';
+import 'package:resmart/model/user_model.dart';
+import 'package:resmart/utils/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class PropertyListPage extends StatelessWidget {
+class PropertyListPage extends StatefulWidget {
   const PropertyListPage({Key? key}) : super(key: key);
 
   @override
+  State<PropertyListPage> createState() => _PropertyListPageState();
+}
+
+class _PropertyListPageState extends State<PropertyListPage> {
+  final ApiService apiService = ApiService();
+  EstateModel? estateModel;
+  List<EstateModel> estateList = [];
+  Future<dynamic> getEstates() async {
+    var response = await apiService.getAllEstates();
+    //print('data: ${response.data['data']["activeEstate"]}');
+
+    return response.data;
+  }
+
+  bool isLoading = false;
+  @override
+  void initState() {
+    getEstates().then((value) {
+      var data = value['data']["activeEstate"];
+      for (var item in data) {
+        setState(() {
+          estateList.add(EstateModel.fromData(item));
+          isLoading = true;
+        });
+      }
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String e =
-        'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80';
-    return ProductList(
-      productImagee: e,
-      productLocation: "Lagos",
-      productPrice: "100000",
-      productTitle: "Mercedez Benz LV 350",
-      onTapCard: () {
-        debugPrint("proceed to product details page");
-      },
-      onCall: () {
-        debugPrint("Oh let make a call");
-      },
-      onChat: () {
-        debugPrint("Send me a message");
-      },
-    );
+    if (estateList == []) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            color: kPrimaryBodyColor,
+          ),
+        ),
+      );
+    } else {
+      return !isLoading ? const Center(
+          child: CircularProgressIndicator(
+            color:  Colors.amber,
+          ),
+        ) : ListView.builder(
+        itemCount: estateList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ProductList(
+            productImagee: estateList[index].estateImage.first,
+            onTapCard: () {},
+            productLocation: estateList[index].estateLocation,
+            productPrice: estateList[index].estatePrice,
+            productTitle: estateList[index].estateName,
+            onCall: () {},
+            onChat: () {},
+          );
+        },
+      );
+    }
   }
 }

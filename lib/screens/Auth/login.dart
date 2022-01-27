@@ -36,10 +36,10 @@ class LoginPage extends StatelessWidget {
                   response.statusCode == 202) {
                 //String token = response.data["token"];
 
-                var token = prefs.getString('token');
-                print(token);
-               await Fluttertoast.showToast(
-                    msg: response.statusMessage.toString(),
+                String token = response.data['data']['token'];
+                            prefs.setString('token', token);
+                await Fluttertoast.showToast(
+                    msg: response.data["response_message"].toString(),
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
@@ -48,15 +48,20 @@ class LoginPage extends StatelessWidget {
                     fontSize: 16.0);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomePage()));
-              } else {
-                Fluttertoast.showToast(
-                    msg: response.statusMessage.toString(),
+                return;
+              }
+              if (response.statusCode == 400 ||
+                  response.statusCode == 401 ||
+                  response.statusCode == 500) {
+               await Fluttertoast.showToast(
+                    msg: response.data["response_message"].toString(),
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
                     backgroundColor: kPrimaryBodyColor,
                     textColor: Colors.white,
                     fontSize: 16.0);
+                return;
               }
             }
           },
