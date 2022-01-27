@@ -25,7 +25,7 @@ class _RootPageState extends State<RootPage> {
     verifyUser().then((value) {
       setState(() {
         isLogin = value;
-        print(isLogin);
+       // print(isLogin);
       });
     });
     super.initState();

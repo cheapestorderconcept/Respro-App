@@ -3,6 +3,7 @@ import 'package:resmart/components/profile_page_content.dart';
 import 'package:resmart/screens/Auth/change_password.dart';
 import 'package:resmart/screens/Auth/change_phone.dart';
 import 'package:resmart/screens/Auth/email_verification.dart';
+import 'package:resmart/utils/api_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final ApiService apiService = ApiService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
         foregroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Center(
+        title: const Center(
           child: Padding(
             padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
             child: Text(

@@ -26,6 +26,7 @@ class ProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      shrinkWrap: true,
       children: [
         Container(
           child: child,
@@ -51,7 +52,7 @@ class ProductList extends StatelessWidget {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: CachedNetworkImageProvider(productImagee)),
+                              image: AssetImage(productImagee)),
                         ),
                       ),
                       const SizedBox(

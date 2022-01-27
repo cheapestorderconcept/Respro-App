@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
 //           ),
 //           backgroundColor: kAppBarColor,
 //         ),
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({
     Key? key,
     required this.imgList,
@@ -99,13 +99,28 @@ class Home extends StatelessWidget {
   final List<String> imgList;
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  bool isLoading = false;
+  @override
+  void initState() {
+    setState(() {
+      isLoading = true;
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       // mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         CarouselSlider(
             options: CarouselOptions(autoPlay: true),
-            items: imgList.map((e) {
+            items: widget.imgList.map((e) {
               return CachedNetworkImage(
                 imageUrl: e,
                 imageBuilder: (context, imageProvider) => Container(
@@ -159,9 +174,21 @@ class Home extends StatelessWidget {
               ]),
               SizedBox(
                 height: MediaQuery.of(context).size.height,
-                child: const TabBarView(children: [
-                  PropertyListPage(),
-                  JobList(),
+                child: TabBarView(children: [
+                  !isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color:  Colors.amber,
+                          ),
+                        )
+                      : const PropertyListPage(),
+                 !isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.amber,
+                          ),
+                        )
+                      : const JobList(),
                 ]),
               ),
             ],

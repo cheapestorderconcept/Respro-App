@@ -1,27 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:resmart/components/product_list.dart';
+import 'package:resmart/constants/style.dart';
+import 'package:resmart/model/job_model.dart';
+import 'package:resmart/utils/api_service.dart';
 
-class JobList extends StatelessWidget {
+class JobList extends StatefulWidget {
   const JobList({Key? key}) : super(key: key);
 
   @override
+  State<JobList> createState() => _JobListState();
+}
+
+class _JobListState extends State<JobList> {
+  final ApiService apiService = ApiService();
+  JobModel? jobModel;
+  List<JobModel> jobList = [];
+  Future<dynamic> getJobs() async {
+    var response = await apiService.getAllJobs();
+    //print('data: ${response.data['data']["activejob"]}');
+
+    return response.data;
+  }
+
+  bool isLoading = false;
+  @override
+  void initState() {
+    getJobs().then((value) {
+      var data = value['data']["activeJob"];
+      for (var item in data) {
+        setState(() {
+          jobList.add(JobModel.fromJson(item));
+          isLoading = true;
+        });
+      }
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String e =
-        'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80';
-    return ProductList(
-      productImagee: e,
-      productLocation: "Lagos",
-      productPrice: "100000",
-      productTitle: "Mercedez Benz LV 350",
-      onTapCard: () {
-        debugPrint("proceed to product details page");
-      },
-      onCall: () {
-        debugPrint("Oh let make a call");
-      },
-      onChat: () {
-        debugPrint("Send me a message");
-      },
-    );
+    if (jobList == []) {
+      return const Scaffold(
+        body: Center(
+          child: Text('No Job available at the moment. \nTry Again')
+        ),
+      );
+    } else {
+      return !isLoading ? const Center(
+          child: CircularProgressIndicator(
+            color:  Colors.amber,
+          ),
+        ) : ListView.builder(
+        itemCount: jobList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ProductList(
+            productImagee: jobList[index].jobImage.first,
+            onTapCard: () {},
+            productLocation: jobList[index].jobLocation,
+            productPrice: jobList[index].jobPrice,
+            productTitle: jobList[index].jobName,
+            onCall: () {},
+            onChat: () {},
+          );
+        },
+      );
+    }
   }
 }

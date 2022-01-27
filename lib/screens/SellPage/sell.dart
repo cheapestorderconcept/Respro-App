@@ -44,7 +44,7 @@ class SellPage extends StatelessWidget {
               ]),
               SizedBox(
                 height: MediaQuery.of(context).size.height,
-                child: const TabBarView(children: [
+                child:  TabBarView(children: [
                   PostPropertyPage(),
                   JobPostingPage(),
                 ]),

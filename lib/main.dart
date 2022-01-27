@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         PropertiesSearchPage.propertySearchRoute: (context) =>
             PropertiesSearchPage(),
         SettingsPage.settingsRoute: (context) => const SettingsPage(),
-        ChangePasswordPage.route: (context) => const ChangePasswordPage(),
+        ChangePasswordPage.route: (context) =>  ChangePasswordPage(),
         ChangePhoneNumber.route: (context) => const ChangePhoneNumber(),
         EmailVerificationPage.route: (context) => const EmailVerificationPage(),
         PropertySearchResultPage.propertyResult: (context) =>
